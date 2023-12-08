@@ -1,16 +1,14 @@
 <?php
 
-class User_m extends CI_Model
+class Documents_m extends CI_Model
 {
     public function __construct()
 	{
 		parent::__construct();
 		date_default_timezone_set('Asia/Jakarta');
-		$this->load->helper(array('form', 'url'));
-		$this->load->library(array('form_validation', 'upload'));
 	}
 
-    public function get_profile($nik)
+    public function get_documents_group($nik)
     {
         $res = [];
         $data = $this->db->get_where('user', ['nik' => $nik]);

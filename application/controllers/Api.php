@@ -10,55 +10,36 @@ class Api extends AppAuth {
         parent::__construct();
         $this->validation();
         $this->load->model('user_m', 'user');
-    }
-
-    public function users_get()
-    {
-
-        // Users from a data store e.g. database
-        $users = [
-            ['id' => 0, 'name' => 'John', 'email' => 'john@example.com'],
-            ['id' => 1, 'name' => 'Jim', 'email' => 'jim@example.com'],
-        ];
-
-        $id = $this->get( 'id' );
-
-        if ( $id === null )
-        {
-            // Check if the users data store contains users
-            if ( $users )
-            {
-                // Set the response and exit
-                $this->response( $users, 200 );
-            }
-            else
-            {
-                // Set the response and exit
-                $this->response( [
-                    'status' => false,
-                    'message' => 'No users were found'
-                ], 404 );
-            }
-        }
-        else
-        {
-            if ( array_key_exists( $id, $users ) )
-            {
-                $this->response( $users[$id], 200 );
-            }
-            else
-            {
-                $this->response( [
-                    'status' => false,
-                    'message' => 'No such user found'
-                ], 404 );
-            }
-        }
+        $this->load->model('documents_m', 'documents');
     }
 
     public function index_get()
     {
         $result = $this->user->list_user();
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+
+    public function profile_get()
+    {
+        $result = $this->user->get_profile($this->get('nik'));
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+
+    public function profile_post()
+    {
+        $result = $this->user->post_profile($this->input->post(),  $_FILES);
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+
+    public function change_password_post()
+    {
+        $result = $this->user->post_change_password($this->input->post(),  $_FILES);
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+
+    public function documents_group_get()
+    {
+        $result = $this->user->get_documents_group();
         $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
 }
