@@ -13,6 +13,23 @@ class Api extends AppAuth {
         $this->load->model('documents_m', 'documents');
     }
 
+    public function list_user_get()
+    {
+        // $users = $this->user->list_user();
+        $users = $this->db->get('user');
+        if ($users) {
+            $this->response([
+                'status' => true,
+                'data' => $users->result_array()
+            ], self::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'data' => 'Account is not registered!'
+            ], self::HTTP_NOT_FOUND);
+        }
+    }
+    
     public function index_get()
     {
         $result = $this->user->list_user();
@@ -27,8 +44,12 @@ class Api extends AppAuth {
 
     public function profile_post()
     {
-        $result = $this->user->post_profile($this->input->post(),  $_FILES);
-        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+        $this->response([
+            'status' => true,
+            'data' => $_FILES
+        ], self::HTTP_OK);
+        // $result = $this->user->post_profile($this->input->post(),  $_FILES);
+        // $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
 
     public function change_password_post()

@@ -3,6 +3,7 @@
 <div class="card">
     <div class="card-body pt-4">
         <a href="<?= base_url() ?>user/add_user" type="button" class="btn btn-success mb-3"><i class="bi bi-person-plus-fill"></i> Add</a>
+        <a href="<?= base_url() ?>user/export" type="button" class="btn btn-primary mb-3"><i class="bi bi-printer-fill"></i> Excel</a>
         <table id="user_tbl" class=" table datatable display nowrap" style="width:100%">
             <thead>
                 <tr>

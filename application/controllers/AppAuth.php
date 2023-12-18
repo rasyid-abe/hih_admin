@@ -18,10 +18,13 @@ class AppAuth extends RestController {
     public function index_post()
     {
         $date = new DateTime();
-        $post = $this->input->post();
-
-        $nik = $this->input->post('nik');
-		$password = $this->input->post('password');
+        // $post = $this->input->post();
+        // $nik = $this->input->post('nik');
+		// $password = $this->input->post('password');
+        
+        $obj = json_decode(file_get_contents('php://input'));
+        $nik = $obj->nik;
+		$password = $obj->password;
 
 		$user = $this->db->get_where('user', ['nik' => $nik])->row_array();
         if ($user) {
@@ -85,7 +88,8 @@ class AppAuth extends RestController {
 
     public function list_user_get()
     {
-        $users = $this->user->list_user();
+        // $users = $this->user->list_user();
+        $users = $this->db->get('user');
         if ($users) {
             $this->response([
                 'status' => true,

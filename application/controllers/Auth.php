@@ -35,7 +35,7 @@ class Auth extends CI_Controller {
 				];
 				$this->session->set_userdata($data);
 
-				redirect('user');
+				redirect('home');
 			} else {
 				$this->session->set_flashdata('alert_head', 'error');
 				$this->session->set_flashdata('alert_msg', 'Wrong password!');

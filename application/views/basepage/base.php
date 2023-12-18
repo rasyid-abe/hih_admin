@@ -21,6 +21,7 @@
 
     <link href="<?= base_url() ?>assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="<?= base_url() ?>assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/css/jquery.toast.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/css/style.css" rel="stylesheet">
 

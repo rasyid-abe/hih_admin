@@ -13,7 +13,9 @@ class Home extends CI_Controller {
 
 	public function index()
 	{
-		$data = [1,2,3];
-		$this->template->load('basepage/base', 'content', $data);
+		$data = [];
+
+		$data['title'] = 'Dashboard';
+		$this->template->load('basepage/base', 'home/dashboard-v', $data);
 	}
 }
