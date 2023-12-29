@@ -102,4 +102,23 @@ class AppAuth extends RestController {
             ], self::HTTP_NOT_FOUND);
         }
     }
+
+    
+    public function fraud_add_post()
+    {
+        // echo '<pre>';
+        // var_dump($_FILES);
+        // die;
+        if($_FILES) {
+            $this->response([
+                'status' => true,
+                'data' => $_FILES
+            ], self::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'data' => 'Account is not registered!'
+            ], self::HTTP_NOT_FOUND);
+        }
+    }
 }

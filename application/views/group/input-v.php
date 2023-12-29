@@ -11,6 +11,20 @@
                             <small class="text-danger"><?= form_error('name') ?></small>
                         </div>
                     </div>
+
+                    <!-- <div class="row mb-3">
+                        <label for="role" class="col-sm-3 col-form-label">Group Document  <span class="text-danger">*</span></label>
+                        <div class="col-sm-9">
+                            <select class="form-select" name="group" id="group" required>
+                                <option selected="">Select Group</option>
+                                <?php foreach ($icons as $k => $v): ?>
+                                    <option><?= $v->name ?><?= '<ion-icon name="'.$v->name.'"></ion-icon>'?><ion-icon name="<?= $v->name ?>"></ion-icon></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small class="text-danger"><?= form_error('group') ?></small>
+                        </div>
+                    </div> -->
+                    
                     <div class="row mb-3">
                         <label for="description" class="col-sm-3 col-form-label">Description</label>
                         <div class="col-sm-9">
@@ -32,3 +46,6 @@
         </div>
     </div>
 </div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

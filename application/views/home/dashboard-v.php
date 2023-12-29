@@ -24,7 +24,7 @@
             <h2><i class="bi bi-file-earmark-pdf-fill"></i></h2>
         </div>
         <div class="ps-3">
-            <h3>145</h3>    
+            <h3><?= $pdf ?></h3>    
         </div>
         </div>
     </div>
@@ -43,7 +43,7 @@
             <h2><i class="bi bi-file-earmark-medical-fill"></i></h2>
         </div>
         <div class="ps-3">
-            <h3>213</h3>    
+            <h3><?= $text ?></h3>    
         </div>
         </div>
     </div>
@@ -62,7 +62,7 @@
             <h2><i class="bi bi-stack"></i></h2>
         </div>
         <div class="ps-3">
-            <h3>53</h3>    
+            <h3><?= $fraud ?></h3>    
         </div>
         </div>
     </div>
@@ -81,7 +81,7 @@
             <h2><i class="bi bi-person-lines-fill"></i></h2>
         </div>
         <div class="ps-3">
-            <h3>331</h3>    
+            <h3><?= $user ?></h3>    
         </div>
         </div>
     </div>
@@ -93,61 +93,33 @@
 
  <!-- Recent Sales -->
  <div class="col-12">
-              <div class="card recent-sales overflow-auto">
+    <div class="card recent-sales overflow-auto">
 
-                <div class="card-body">
-                  <h5 class="card-title">Recent Activities <span>| Total</span></h5>
+      <div class="card-body">
+        <h5 class="card-title">Recent Activities</h5>
 
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">User</th>
-                        <th scope="col">Activities</th>
-                        <th scope="col">DateTime</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td>Brandon Jacob</td>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td>$64</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2147</a></th>
-                        <td>Bridie Kessler</td>
-                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                        <td>$47</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2049</a></th>
-                        <td>Ashleigh Langosh</td>
-                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                        <td>$147</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Angus Grady</td>
-                        <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                        <td>$67</td>
-                        <td><span class="badge bg-danger">Rejected</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
+        <table class="table table-borderless datatable">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">User</th>
+              <th scope="col">DateTime</th>
+              <th scope="col">Activities</th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php foreach ($activities as $k => $v): ?>
+            <tr>
+              <td><?= $k +1 ?></td>
+              <td><?= $v['id_user']?></td>
+              <td><?= $v['datetime']?></td>
+              <td><?= $v['activities']?></td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
 
-                </div>
+      </div>
 
-              </div>
-            </div><!-- End Recent Sales -->
+    </div>
+  </div><!-- End Recent Sales -->

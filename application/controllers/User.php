@@ -49,7 +49,7 @@ class User extends CI_Controller {
 			$img = $_FILES['foto']['name'];
 
 			if ($img) {
-				$config['upload_path'] = './assets/images/';
+				$config['upload_path'] = './assets/profiles/';
 				$config['allowed_types'] = 'gif|jpg|jpeg|png';
 				$config['max_size'] = '2048';
 
@@ -58,7 +58,7 @@ class User extends CI_Controller {
 				if ($this->upload->do_upload('foto')) {
 					$old_image = $row['foto'];
 					if ($old_image != 'default.png') {
-						unlink(FCPATH.'assets/images/'.$old_image);
+						unlink(FCPATH.'assets/profiles/'.$old_image);
 					}
 					$new_image = $this->upload->data('file_name');
 					$this->db->set('foto', $new_image);
@@ -228,7 +228,7 @@ class User extends CI_Controller {
 		# cascade delete foto
 		$foto = $this->db->get_where('user', ['nik' => $nik])->row('foto');
 		if ($foto != 'default.png') {
-			unlink(FCPATH.'assets/images/'.$foto);
+			unlink(FCPATH.'assets/profiles/'.$foto);
 		}
 
 		$this->db->where('nik', $nik);

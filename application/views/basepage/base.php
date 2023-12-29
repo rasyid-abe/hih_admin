@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Dashboard - NiceAdmin Bootstrap Template</title>
+    <title>HIH - <?= $title ?></title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -67,7 +67,7 @@
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <img src="<?= base_url('assets/images/'.$this->session->userdata('foto')) ?>" alt="Profile" class="rounded-circle">
+                        <img src="<?= base_url('assets/profiles/'.$this->session->userdata('foto')) ?>" alt="Profile" class="rounded-circle">
                         <span class="text-white d-none d-md-block dropdown-toggle ps-2"><?= $this->session->userdata('fullname') ?></span>
                     </a><!-- End Profile Iamge Icon -->
 
@@ -162,6 +162,7 @@
                 </a>
                 <ul id="utility-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li><a href="<?= base_url('fraud') ?>"><i class="bi bi-circle"></i><span>Fraud</span></a></li>
+                    <li><a href="<?= base_url('slide') ?>"><i class="bi bi-circle"></i><span>Slide Banner</span></a></li>
                     <li><a href="<?= base_url('term_condition') ?>"><i class="bi bi-circle"></i><span>Term & Condition</span></a></li>
                 </ul>
             </li><!-- End Forms Nav -->

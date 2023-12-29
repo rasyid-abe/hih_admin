@@ -8,14 +8,81 @@ class Documents_m extends CI_Model
 		date_default_timezone_set('Asia/Jakarta');
 	}
 
-    public function get_documents_group($nik)
+    public function get_home($nik)
     {
         $res = [];
-        $data = $this->db->get_where('user', ['nik' => $nik]);
+
+        $query = "
+        SELECT
+            group_document.id,
+            group_document.name,
+            group_document.icon
+        FROM
+            USER
+        LEFT JOIN role_access ON role_access.id_role = user.role_id
+        LEFT JOIN group_document ON role_access.id_group = group_document.id
+        JOIN document_text ON document_text.group_id = group_document.id
+        WHERE
+            nik = ".$nik."
+        UNION
+        SELECT
+            group_document.id,
+            group_document.name,
+            group_document.icon
+        FROM
+            USER
+        LEFT JOIN role_access ON role_access.id_role = user.role_id
+        LEFT JOIN group_document ON role_access.id_group = group_document.id
+        JOIN document_pdf ON document_pdf.group_id = group_document.id
+        WHERE
+            nik = ".$nik.";
+        ";
+
+        $data = $this->db->query($query)->result_array();
+        if ($data) {
+            $chunk = array_chunk($data, 3);
+            
+            $res = [
+                'status' => true,
+                'data' => $chunk
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => 'Invalid request!'
+            ];
+        }
+
+        return $res;
+    }
+
+    public function get_list_document($group_id)
+    {
+        $res = [];
+
+        $query = "
+        SELECT 
+            document_text.id,
+            document_text.document_name as title,
+            document_text.description as descr,
+            'text' as type
+        FROM document_text
+        WHERE document_text.group_id = ".$group_id." AND document_text.is_active = 1
+        UNION 
+        SELECT
+            document_pdf.id,
+            document_pdf.file_name as title,
+            document_pdf.description as descr,
+            'pdf' as type
+        FROM document_pdf
+        WHERE document_pdf.group_id = ".$group_id." AND document_pdf.is_active = 1;
+        ";
+
+        $data = $this->db->query($query)->result_array();
         if ($data) {
             $res = [
                 'status' => true,
-                'data' => $data->result_array()
+                'data' => $data
             ];
         } else {
             $res = [
@@ -27,46 +94,15 @@ class Documents_m extends CI_Model
         return $res;
     }
 
-    public function post_profile($post, $file)
+    public function get_document_text($id)
     {
         $res = [];
-        $img = $file['foto']['name'];
-        $old = $this->db->get_where('user', ['nik' => $post['nik']])->row('foto');
 
-        if ($img) {
-            $config['upload_path'] = './assets/images/';
-            $config['allowed_types'] = 'gif|jpg|jpeg|png';
-            $config['max_size'] = '2048';
-
-            $this->upload->initialize($config);
-
-            if ($this->upload->do_upload('foto')) {
-                if ($old != 'default.png') {
-                    unlink(FCPATH.'assets/images/'.$old);
-                }
-                $new_image = $this->upload->data('file_name');
-                $this->db->set('foto', $new_image);
-            } else {
-                echo '<pre>';
-                print_r($this->upload->display_errors());
-                exit();
-            }
-        }
-
-        $this->db->set('fullname', htmlspecialchars($post['fullname']));
-        $this->db->set('gender', htmlspecialchars($post['gender']));
-        $this->db->set('email', htmlspecialchars($post['email']));
-        $this->db->set('phone', htmlspecialchars($post['phone']));
-        $this->db->set('updated_by',  $this->session->userdata('id'));
-        $this->db->where('nik', $post['nik']);
-
-        if ($this->db->update('user')) {
-            $this->db->select('nik, fullname, gender, email, phone');
-            $data = $this->db->get_where('user', ['nik' => $post['nik']]);
+        $data = $this->db->get_where('document_text', ['id' => $id])->row_array();
+        if ($data) {
             $res = [
                 'status' => true,
-                'message' => 'Success update profile',
-                'data' => $data->row_array()
+                'data' => $data
             ];
         } else {
             $res = [
@@ -78,44 +114,4 @@ class Documents_m extends CI_Model
         return $res;
     }
 
-    public function post_change_password($post)
-    {
-        $res = [];
-        $res['status'] = false;
-
-        $new_password = $post['new_password'];
-        $match_password = $post['match_password'];
-        $current = $post['current_password'];
-        $old =  $this->db->get_where('user', ['nik' => $post['nik']])->row('password');
-
-        if ($old) {
-            if (!password_verify($current, $old)) {
-                $res['message'] = 'Current password is wrong!';
-            } else {
-                if ($new_password == $current) {
-                    $res['message'] = 'New password is same as current password!';
-                } else {
-                    if ($new_password != $match_password) {
-                        $res['message'] = "Password is not match!";
-                    } else {
-                        $hash_pass = password_hash($new_password, PASSWORD_DEFAULT);
-
-                        $this->db->set('password', $hash_pass);
-                        $this->db->where('nik', $post['nik']);
-                        if ($this->db->update('user')) {
-                            $res['status'] = true;
-                            $res['message'] = 'Success change password!';
-                        } else {
-                            $res['message'] = 'Change password is failed!';
-                        }
-                    }
-                }
-            }
-        } else {
-            $res['message'] = 'Something Wrong!';
-        }
-
-
-        return $res;
-    }
 }

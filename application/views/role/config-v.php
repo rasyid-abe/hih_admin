@@ -14,7 +14,6 @@
                 <div class="row mb-3">
                     <div class="col-sm-12" style="margin-left: 6px;">
                         <a href="<?= base_url()?>role" type="button" class="btn btn-primary">Back</a>
-                        <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                 </div>
             </div>

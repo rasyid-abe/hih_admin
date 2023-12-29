@@ -28,6 +28,12 @@ class Group extends CI_Controller {
 
 		if ($this->form_validation->run() == false) {
 			$data = [];
+
+			$json = file_get_contents(base_url().'assets/js/data.json');
+			$obj  = json_decode($json);
+
+			$data['icons'] = $obj->icons;
+
 			$data['title'] = "Add Group";
 			$this->template->load('basepage/base', 'group/input-v', $data);
 		} else {
