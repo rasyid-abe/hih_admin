@@ -41,6 +41,7 @@ class Group extends CI_Controller {
 
             $data = [
 				'name' => htmlspecialchars($post['name']),
+				'icon' => htmlspecialchars($post['icon']),
 				'description' => htmlspecialchars($post['description']),
 				'date_created' => date("Y-m-d H:i:s"),
 				'created_by' => $this->session->userdata('id'),
@@ -68,16 +69,26 @@ class Group extends CI_Controller {
 
 		if ($this->form_validation->run() == false) {
 
+			$data = [];
 			$id = $post ? $post['id'] : $id;
 			$row = $this->db->get_where('group_document', ['id' => $id])->row_array();
 
-			$data = [];
+			$json = file_get_contents(base_url().'assets/js/data.json');
+			$obj  = json_decode($json);
+
+			$data['icons'] = $obj->icons;
+
 			$data['title'] = "Edit Group";
 			$data['row'] = $row;
 			$this->template->load('basepage/base', 'group/edit-v', $data);
 		} else {
 
+			// echo '<pre>';
+			// print_r($post);
+			// die;
+
 			$this->db->set('name', htmlspecialchars($post['name']));
+			$this->db->set('icon', htmlspecialchars($post['icon']));
 			$this->db->set('description', htmlspecialchars($post['description']));
 			$this->db->set('updated_by',  $this->session->userdata('id'));
 			$this->db->where('id', $post['id']);

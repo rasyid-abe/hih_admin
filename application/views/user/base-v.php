@@ -23,7 +23,7 @@
                 <?php foreach ($rows as $k => $v): ?>
                     <tr>
                         <td class="text-center"><?php echo $k + 1 ?></td>
-                        <td class="text-center"> <img src="<?php echo base_url('assets/images/'.$v['foto']) ?>" height="25" alt=""></td>
+                        <td class="text-center"> <img src="<?php echo base_url('assets/profiles/'.$v['foto']) ?>" height="25" alt=""></td>
                         <td><?php echo $v['nik'] ?></td>
                         <td><?php echo $v['fullname'] ?></td>
                         <td><?php echo $v['email'] ?></td>

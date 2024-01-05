@@ -32,43 +32,52 @@ class User_m extends CI_Model
     public function post_profile($post, $file)
     {
         $res = [];
-        $img = $file['foto']['name'];
         $old = $this->db->get_where('user', ['nik' => $post['nik']])->row_array();
-
-        if ($img) {
-            $config['upload_path'] = './assets/profiles/';
-            $config['allowed_types'] = 'gif|jpg|jpeg|png';
-            $config['max_size'] = '2048';
-
-            $this->upload->initialize($config);
-
-            if ($this->upload->do_upload('foto')) {
-                if ($old['foto'] != 'default.png') {
-                    unlink(FCPATH.'assets/profiles/'.$old['foto']);
+        
+        if (count($file) > 0) {
+            $img = $file['foto']['name'];
+            if ($img) {
+                $config['upload_path'] = './assets/profiles/';
+                $config['allowed_types'] = 'gif|jpg|jpeg|png';
+                $config['max_size'] = '2048';
+    
+                $this->upload->initialize($config);
+    
+                if ($this->upload->do_upload('foto')) {
+                    if ($old['foto'] != 'default.png') {
+                        unlink(FCPATH.'assets/profiles/'.$old['foto']);
+                    }
+                    $new_image = $this->upload->data('file_name');
+                    $this->db->set('foto', $new_image);
+                } else {
+                    $res = [
+                        'status' => false,
+                        'message' => $this->upload->display_errors()
+                    ];
                 }
-                $new_image = $this->upload->data('file_name');
-                $this->db->set('foto', $new_image);
-            } else {
-                echo '<pre>';
-                print_r($this->upload->display_errors());
-                exit();
             }
         }
 
         $this->db->set('fullname', htmlspecialchars($post['fullname']));
         $this->db->set('gender', htmlspecialchars($post['gender']));
         $this->db->set('email', htmlspecialchars($post['email']));
-        $this->db->set('phone', htmlspecialchars($post['phone']));
+        $this->db->set('phone', (int)$post['phone']);
         $this->db->set('updated_by',  $this->session->userdata($old['id']));
         $this->db->where('nik', $post['nik']);
 
         if ($this->db->update('user')) {
-            $this->db->select('nik, fullname, gender, email, phone');
+            $logs = [
+                'nik' => $post['nik'],
+                'log' => 'Update Profile'
+            ];
+            activity($logs);
+            
+            $this->db->select('nik, fullname, gender, email, phone, foto');
             $data = $this->db->get_where('user', ['nik' => $post['nik']]);
             $res = [
                 'status' => true,
                 'message' => 'Success update profile',
-                'data' => $old
+                'data' => $data->row_array()
             ];
         } else {
             $res = [
@@ -105,6 +114,12 @@ class User_m extends CI_Model
                         $this->db->set('password', $hash_pass);
                         $this->db->where('nik', $post['nik']);
                         if ($this->db->update('user')) {
+                            $logs = [
+                                'nik' => $post['nik'],
+                                'log' => 'Change Password'
+                            ];
+                            activity($logs);
+
                             $res['status'] = true;
                             $res['message'] = 'Success change password!';
                         } else {

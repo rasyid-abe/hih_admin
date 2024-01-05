@@ -12,18 +12,18 @@
                         </div>
                     </div>
 
-                    <!-- <div class="row mb-3">
-                        <label for="role" class="col-sm-3 col-form-label">Group Document  <span class="text-danger">*</span></label>
-                        <div class="col-sm-9">
-                            <select class="form-select" name="group" id="group" required>
-                                <option selected="">Select Group</option>
+                    <div class="row mb-2">
+                        <label for="role" class="col-sm-3 col-form-label">Icon Group <span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
+                            <select class="form-control select2" name="icon" id="icon" required>
+                                <option selected="">Select Icon Group</option>
                                 <?php foreach ($icons as $k => $v): ?>
-                                    <option><?= $v->name ?><?= '<ion-icon name="'.$v->name.'"></ion-icon>'?><ion-icon name="<?= $v->name ?>"></ion-icon></option>
+                                    <option value="<?= $v->name ?>"><?= $v->name ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <small class="text-danger"><?= form_error('group') ?></small>
                         </div>
-                    </div> -->
+                        <label for="role" class="col-sm-2 col-form-label" style="margin-top: -8px"> <a href="https://ionic.io/ionicons" target="_blank" class="btn btn-sm btn-danger">View</a> </label>
+                    </div>
                     
                     <div class="row mb-3">
                         <label for="description" class="col-sm-3 col-form-label">Description</label>

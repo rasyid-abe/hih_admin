@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once APPPATH .'controllers/AppAuth.php';
+require_once APPPATH .'controllers/Appauth.php';
 
-class Api extends AppAuth {
+class Api extends Appauth {
 
     function __construct()
     {
@@ -23,13 +23,13 @@ class Api extends AppAuth {
     
     public function list_document_get()
     {
-        $result = $this->documents->get_list_document($_GET['group_id']);
+        $result = $this->documents->get_list_document($_GET);
         $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
 
     public function document_text_get()
     {
-        $result = $this->documents->get_document_text($_GET['text_id']);
+        $result = $this->documents->get_document_text($_GET);
         $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
 
@@ -51,26 +51,47 @@ class Api extends AppAuth {
         $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
    
-    
     public function fraud_post()
     {
-        // echo '<pre>';
-        // var_dump($_FILES);
-        // die;
-        if(true) {
-            $this->response([
-                'status' => true,
-                'data' => $_FILES
-            ], self::HTTP_OK);
-        } else {
-            $this->response([
-                'status' => FALSE,
-                'data' => 'Account is not registered!'
-            ], self::HTTP_NOT_FOUND);
-        }
+        $result = $this->documents->post_fraud($_POST, $_FILES);
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
+   
+    public function fraud_list_get()
+    {
+        $result = $this->documents->get_fraud_list($_GET['nik']);
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+   
+    public function fraud_detail_get()
+    {
+        $result = $this->documents->get_fraud_detail($_GET);
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+   
+    public function search_get()
+    {
+        $result = $this->documents->get_search($_GET);
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+
+    public function termcondition_get()
+    {
+        $result = $this->documents->get_termcondition($_GET);
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+
+
+    // if(true) {
+    //     $this->response([
+    //         'status' => true,
+    //         'data' => [$_FILES, $_POST]
+    //     ], self::HTTP_OK);
+    // } else {
+    //     $this->response([
+    //         'status' => FALSE,
+    //         'data' => 'Account is not registered!'
+    //     ], self::HTTP_NOT_FOUND);
+    // }
     
 }
-
-
-105

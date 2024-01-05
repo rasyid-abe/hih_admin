@@ -45,7 +45,7 @@
                         <div class="col-sm-4">
                             <div class="custom-file">
                                 <label for="foto">Picture</label><br>
-                                <img src="<?= base_url('assets/images/'.$row['foto']) ?>" alt="" class="img-thumbnail" width="175">
+                                <img src="<?= base_url('assets/profiles/'.$row['foto']) ?>" alt="" class="img-thumbnail" width="175">
                                 <input type="file" name="foto" class="" id="foto" value=""  accept="image/png, image/gif, image/jpeg">
                                 <div class="ln_solid"></div>
                             </div>

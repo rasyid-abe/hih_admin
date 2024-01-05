@@ -5,7 +5,7 @@ use chriskacerguis\RestServer\RestController;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class AppAuth extends RestController {
+class Appauth extends RestController {
 
     private $uniq;
     function __construct()
@@ -13,9 +13,28 @@ class AppAuth extends RestController {
         parent::__construct();
         $this->uniq = 'hihapp_v1.0';
         $this->load->model('user_m', 'user');
+        $this->load->model('documents_m', 'documents');
     }
 
-    public function index_post()
+    public function show_post()
+    {
+        if(true) {
+            $this->response([
+                'status' => true,
+                'data' => 'yey, we did i22t'
+            ], self::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'data' => 'Account is not registered!'
+            ], self::HTTP_NOT_FOUND);
+        }
+
+        // $result = $this->documents->get_home($_GET['nik']);
+        // $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+
+    public function login_axios_post()
     {
         $date = new DateTime();
         // $post = $this->input->post();
@@ -25,7 +44,7 @@ class AppAuth extends RestController {
         $obj = json_decode(file_get_contents('php://input'));
         $nik = $obj->nik;
 		$password = $obj->password;
-
+        
 		$user = $this->db->get_where('user', ['nik' => $nik])->row_array();
         if ($user) {
             if (password_verify($password, $user['password'])) {
@@ -36,6 +55,12 @@ class AppAuth extends RestController {
                     'iat' => $date->getTimestamp(),
                     'exp' => $date->getTimestamp() + (60*(60*3))
                 ];
+                
+                $logs = [
+                    'nik' => $nik,
+                    'log' => 'Login App'
+                ];
+                activity($logs);
 
                 $token = JWT::encode($payload, $this->uniq, 'HS256');
 
@@ -44,6 +69,62 @@ class AppAuth extends RestController {
                     'data' => [
                         'id' => $user['id'],
                         'fullname' => $user['fullname'],
+                        'foto' => $user['foto'],
+                        'nik' => $user['nik'],
+                    ],
+                    'token' => $token
+                ], self::HTTP_OK);
+
+            } else {
+                $this->response([
+                    'status' => false,
+                    'message' => 'Wrong Password!'
+                ], self::HTTP_FORBIDDEN);
+            }
+        } else {
+            $this->response([
+                'status' => false,
+                'message' => 'Account is not registered!'
+            ], self::HTTP_NOT_FOUND);
+        }
+
+    }
+    public function index_post()
+    {
+        $date = new DateTime();
+        $post = $this->input->post();
+        $nik = $this->input->post('nik');
+		$password = $this->input->post('password');
+        
+        // $obj = json_decode(file_get_contents('php://input'));
+        // $nik = $obj->nik;
+		// $password = $obj->password;
+        
+		$user = $this->db->get_where('user', ['nik' => $nik])->row_array();
+        if ($user) {
+            if (password_verify($password, $user['password'])) {
+                $payload = [
+                    'id' => $user['id'],
+                    'fullname' => $user['fullname'],
+                    'nik' => $user['nik'],
+                    'iat' => $date->getTimestamp(),
+                    'exp' => $date->getTimestamp() + (60*(60*3))
+                ];
+                
+                $logs = [
+                    'nik' => $nik,
+                    'log' => 'Login App'
+                ];
+                activity($logs);
+
+                $token = JWT::encode($payload, $this->uniq, 'HS256');
+
+                $this->response([
+                    'status' => true,
+                    'data' => [
+                        'id' => $user['id'],
+                        'fullname' => $user['fullname'],
+                        'foto' => $user['foto'],
                         'nik' => $user['nik'],
                     ],
                     'token' => $token
@@ -86,39 +167,4 @@ class AppAuth extends RestController {
 
     }
 
-    public function list_user_get()
-    {
-        // $users = $this->user->list_user();
-        $users = $this->db->get('user');
-        if ($users) {
-            $this->response([
-                'status' => true,
-                'data' => $users->result_array()
-            ], self::HTTP_OK);
-        } else {
-            $this->response([
-                'status' => FALSE,
-                'data' => 'Account is not registered!'
-            ], self::HTTP_NOT_FOUND);
-        }
-    }
-
-    
-    public function fraud_add_post()
-    {
-        // echo '<pre>';
-        // var_dump($_FILES);
-        // die;
-        if($_FILES) {
-            $this->response([
-                'status' => true,
-                'data' => $_FILES
-            ], self::HTTP_OK);
-        } else {
-            $this->response([
-                'status' => FALSE,
-                'data' => 'Account is not registered!'
-            ], self::HTTP_NOT_FOUND);
-        }
-    }
 }

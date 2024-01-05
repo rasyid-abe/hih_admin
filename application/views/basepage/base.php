@@ -195,16 +195,20 @@
     </footer> -->
 
     <script type="text/javascript">
-    function toast_act(heading, text, status, time=5000) {
-        $.toast({
-            heading: heading,
-            text: text,
-            showHideTransition: 'fade',
-            position: 'top-right',
-            icon: status,
-            hideAfter: time
+        $(document).ready(function(){
+            $('.select2').select2();
         })
-    }
+
+        function toast_act(heading, text, status, time=5000) {
+            $.toast({
+                heading: heading,
+                text: text,
+                showHideTransition: 'fade',
+                position: 'top-right',
+                icon: status,
+                hideAfter: time
+            })
+        }
     </script>
     <?php if ($this->session->flashdata('alert_msg')): ?>
         <?= '<script type="text/javascript">',
@@ -214,12 +218,15 @@
             '5000 )</script>';
         ?>
     <?php endif; ?>
-
+    <link href="<?= base_url() ?>assets/css/select2.min.css" rel="stylesheet">
+    <script src="<?= base_url() ?>assets/js/select2.min.js" charset="utf-8"></script>
     <script src="<?= base_url() ?>assets/js/jquery.dataTables.min.js" charset="utf-8"></script>
     <script src="<?= base_url() ?>assets/js/dataTables.responsive.min.js" charset="utf-8"></script>
     <script src="<?= base_url() ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url() ?>assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="<?= base_url() ?>assets/js/main.js"></script>
+    
+
 
 </body>
 

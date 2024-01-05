@@ -22,3 +22,9 @@ function check_access($role, $group)
         return "checked='checked'";
     }
 }
+
+function activity($params)
+{
+    $ci = get_instance();
+    $ci->db->insert('log_activities', $params);
+}

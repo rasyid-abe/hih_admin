@@ -96,12 +96,13 @@
     <div class="card recent-sales overflow-auto">
 
       <div class="card-body">
-        <h5 class="card-title">Recent Activities</h5>
+        <h5 class="card-title">Recent Activities <a class="btn btn-sm btn-info" href="<?=base_url('activity')?>">View All</a> </h5>
 
         <table class="table table-borderless datatable">
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">NIK</th>
               <th scope="col">User</th>
               <th scope="col">DateTime</th>
               <th scope="col">Activities</th>
@@ -111,9 +112,10 @@
           <?php foreach ($activities as $k => $v): ?>
             <tr>
               <td><?= $k +1 ?></td>
-              <td><?= $v['id_user']?></td>
+              <td><?= $v['nik']?></td>
+              <td><?= $v['fullname']?></td>
               <td><?= $v['datetime']?></td>
-              <td><?= $v['activities']?></td>
+              <td><?= $v['log']?></td>
             </tr>
           <?php endforeach; ?>
           </tbody>
