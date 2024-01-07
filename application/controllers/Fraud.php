@@ -82,6 +82,7 @@ class Fraud extends CI_Controller {
 		$sheet->setCellValue('G3', "TIPE PELAPORAN"); // Set kolom E3 dengan tulisan "ALAMAT"
 		$sheet->setCellValue('H3', "NAMA MARKETING"); // Set kolom E3 dengan tulisan "ALAMAT"
 		$sheet->setCellValue('I3', "NAMA PELANGGAN"); // Set kolom E3 dengan tulisan "ALAMAT"
+		$sheet->setCellValue('J3', "DESKRIPSI"); // Set kolom E3 dengan tulisan "ALAMAT"
 		// Apply style header yang telah kita buat tadi ke masing-masing kolom header
 		$sheet->getStyle('A3')->applyFromArray($style_col);
 		$sheet->getStyle('B3')->applyFromArray($style_col);
@@ -92,6 +93,7 @@ class Fraud extends CI_Controller {
 		$sheet->getStyle('G3')->applyFromArray($style_col);
 		$sheet->getStyle('H3')->applyFromArray($style_col);
 		$sheet->getStyle('I3')->applyFromArray($style_col);
+		$sheet->getStyle('J3')->applyFromArray($style_col);
 
 		// Panggil function view yang ada di SiswaModel untuk menampilkan semua data siswanya
 		$this->db->select('user.fullname, fraud_report.*');
@@ -111,6 +113,7 @@ class Fraud extends CI_Controller {
 		  $sheet->setCellValue('G'.$numrow, $data->report_type);
 		  $sheet->setCellValue('H'.$numrow, $data->marketing_name);
 		  $sheet->setCellValue('I'.$numrow, $data->customer_name);
+		  $sheet->setCellValue('J'.$numrow, $data->description);
 		  
 		  // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
 		  $sheet->getStyle('A'.$numrow)->applyFromArray($style_row);
@@ -122,6 +125,7 @@ class Fraud extends CI_Controller {
 		  $sheet->getStyle('G'.$numrow)->applyFromArray($style_row);
 		  $sheet->getStyle('H'.$numrow)->applyFromArray($style_row);
 		  $sheet->getStyle('I'.$numrow)->applyFromArray($style_row);
+		  $sheet->getStyle('J'.$numrow)->applyFromArray($style_row);
 		  
 		  $no++; // Tambah 1 setiap kali looping
 		  $numrow++; // Tambah 1 setiap kali looping
@@ -136,6 +140,7 @@ class Fraud extends CI_Controller {
 		$sheet->getColumnDimension('G')->setWidth(30); // Set width kolom E
 		$sheet->getColumnDimension('H')->setWidth(30); // Set width kolom E
 		$sheet->getColumnDimension('I')->setWidth(30); // Set width kolom E
+		$sheet->getColumnDimension('J')->setWidth(80); // Set width kolom E
 		
 		// Set height semua kolom menjadi auto (mengikuti height isi dari kolommnya, jadi otomatis)
 		$sheet->getDefaultRowDimension()->setRowHeight(-1);

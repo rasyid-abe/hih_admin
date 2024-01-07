@@ -183,6 +183,36 @@ class Documents_m extends CI_Model
         return $res;
     }
 
+    public function get_document_pdf($get)
+    {
+        $res = [];
+
+        $data = $this->db->get_where('document_pdf', ['id' => $get['pdf_id']])->row_array();
+        if ($data) {
+            $logs = [
+                'nik' => $get['nik'],
+                'log' => 'View Document Text "'. $data['file_name'] .'"'
+            ];
+            activity($logs);
+
+            $res = [
+                'status' => true,
+                'data' => [
+                    'id' => $data['id'],
+                    'file_name' => str_replace(' ', '_', $data['file_name']).'.pdf',
+                    'doc_name' => $data['file_name']
+                ]
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'message' => 'Invalid request!'
+            ];
+        }
+
+        return $res;
+    }
+
     public function post_fraud($post, $file)
     {
         $res = [];

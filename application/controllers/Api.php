@@ -33,6 +33,12 @@ class Api extends Appauth {
         $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
 
+    public function document_pdf_get()
+    {
+        $result = $this->documents->get_document_pdf($_GET);
+        $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
+    }
+
     public function change_password_post()
     {
         $result = $this->user->post_change_password($_POST);

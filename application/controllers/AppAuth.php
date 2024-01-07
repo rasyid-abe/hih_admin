@@ -16,7 +16,7 @@ class Appauth extends RestController {
         $this->load->model('documents_m', 'documents');
     }
 
-    public function show_post()
+    public function show_get()
     {
         if(true) {
             $this->response([
@@ -87,8 +87,8 @@ class Appauth extends RestController {
                 'message' => 'Account is not registered!'
             ], self::HTTP_NOT_FOUND);
         }
-
     }
+    
     public function index_post()
     {
         $date = new DateTime();
@@ -96,6 +96,7 @@ class Appauth extends RestController {
         $nik = $this->input->post('nik');
 		$password = $this->input->post('password');
         
+        // if request with axios
         // $obj = json_decode(file_get_contents('php://input'));
         // $nik = $obj->nik;
 		// $password = $obj->password;
@@ -103,33 +104,39 @@ class Appauth extends RestController {
 		$user = $this->db->get_where('user', ['nik' => $nik])->row_array();
         if ($user) {
             if (password_verify($password, $user['password'])) {
-                $payload = [
-                    'id' => $user['id'],
-                    'fullname' => $user['fullname'],
-                    'nik' => $user['nik'],
-                    'iat' => $date->getTimestamp(),
-                    'exp' => $date->getTimestamp() + (60*(60*3))
-                ];
-                
-                $logs = [
-                    'nik' => $nik,
-                    'log' => 'Login App'
-                ];
-                activity($logs);
-
-                $token = JWT::encode($payload, $this->uniq, 'HS256');
-
-                $this->response([
-                    'status' => true,
-                    'data' => [
+                if ($user['is_active'] > 0) {
+                    $payload = [
                         'id' => $user['id'],
                         'fullname' => $user['fullname'],
-                        'foto' => $user['foto'],
                         'nik' => $user['nik'],
-                    ],
-                    'token' => $token
-                ], self::HTTP_OK);
-
+                        'iat' => $date->getTimestamp(),
+                        'exp' => $date->getTimestamp() + (60*(60*3))
+                    ];
+                    
+                    $logs = [
+                        'nik' => $nik,
+                        'log' => 'Login App'
+                    ];
+                    activity($logs);
+    
+                    $token = JWT::encode($payload, $this->uniq, 'HS256');
+    
+                    $this->response([
+                        'status' => true,
+                        'data' => [
+                            'id' => $user['id'],
+                            'fullname' => $user['fullname'],
+                            'foto' => $user['foto'],
+                            'nik' => $user['nik'],
+                        ],
+                        'token' => $token
+                    ], self::HTTP_OK);
+                } else {
+                    $this->response([
+                        'status' => false,
+                        'message' => 'Account is not active!'
+                ], self::HTTP_FORBIDDEN);
+                }
             } else {
                 $this->response([
                     'status' => false,
