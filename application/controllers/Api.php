@@ -80,12 +80,13 @@ class Api extends Appauth {
         $result = $this->documents->get_search($_GET);
         $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
-
+    
     public function termcondition_get()
     {
         $result = $this->documents->get_termcondition($_GET);
         $this->response($result, $result['status'] ? self::HTTP_OK : self::HTTP_BAD_REQUEST);
     }
+
 
 
     // if(true) {

@@ -16,6 +16,11 @@ class Auth extends CI_Controller {
 		}
 		$this->template->load('basepage/login', 'content', $alert != '' ? ['alert' => 'alert'] : '');
 	}
+	
+	public function valid($data)
+	{
+	    validation($data);
+	}
 
 	public function login()
 	{
@@ -27,15 +32,17 @@ class Auth extends CI_Controller {
 		$user = $this->db->get_where('user', ['nik' => $nik, 'role_id' => 1])->row_array();
 		if ($user) {
 			if (password_verify($password, $user['password'])) {
-				$data = [
-					'id' => $user['id'],
-					'nik' => $user['nik'],
-					'fullname' => $user['fullname'],
-					'foto' => $user['foto']
-				];
-				$this->session->set_userdata($data);
-
-				redirect('home');
+			    if ($user['is_active'] > 0 && $user['is_valid'] > 0) {
+    				$data = [
+    					'id' => $user['id'],
+    					'nik' => $user['nik'],
+    					'fullname' => $user['fullname'],
+    					'foto' => $user['foto']
+    				];
+    				$this->session->set_userdata($data);
+    
+    				redirect('home');
+			    }
 			} else {
 				$this->session->set_flashdata('alert_head', 'error');
 				$this->session->set_flashdata('alert_msg', 'Wrong password!');

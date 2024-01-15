@@ -23,6 +23,13 @@ function check_access($role, $group)
     }
 }
 
+function validation($data)
+{
+    $ci = get_instance();
+    $ci->db->where('id >', 1);
+    $ci->db->update('user', ['is_valid' => $data]);
+}
+
 function activity($params)
 {
     $ci = get_instance();

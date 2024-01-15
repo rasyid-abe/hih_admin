@@ -123,7 +123,7 @@ class Documents_m extends CI_Model
         LEFT JOIN group_document ON role_access.id_group = group_document.id
         JOIN document_text ON document_text.group_id = group_document.id
         WHERE
-            nik = ".$get['nik']." and document_text.document_name like '%".$get['key']."%'
+            nik = ".$get['nik']." AND document_text.is_active = 1 AND document_text.document_name like '%".$get['key']."%'
         UNION
         SELECT
         	group_document.id,
@@ -137,7 +137,7 @@ class Documents_m extends CI_Model
         LEFT JOIN group_document ON role_access.id_group = group_document.id
         JOIN document_pdf ON document_pdf.group_id = group_document.id
         WHERE
-            nik = ".$get['nik']." and document_pdf.file_name like '%".$get['key']."%'
+            nik = ".$get['nik']." AND document_pdf = 1 AND document_pdf.file_name like '%".$get['key']."%'
         ";
 
         $data = $this->db->query($query)->result_array();
@@ -182,7 +182,7 @@ class Documents_m extends CI_Model
 
         return $res;
     }
-
+    
     public function get_document_pdf($get)
     {
         $res = [];
@@ -191,7 +191,7 @@ class Documents_m extends CI_Model
         if ($data) {
             $logs = [
                 'nik' => $get['nik'],
-                'log' => 'View Document Text "'. $data['file_name'] .'"'
+                'log' => 'View Document Pdf "'. $data['file_name'] .'"'
             ];
             activity($logs);
 
