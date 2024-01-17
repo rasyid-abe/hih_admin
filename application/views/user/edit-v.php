@@ -51,6 +51,18 @@
                             <small class="text-danger"><?= form_error('role') ?></small>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <label for="role" class="col-sm-3 col-form-label">User Branch</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" name="branch" id="branch" required>
+                                <option selected="">Select Role</option>
+                                <?php foreach ($branch as $k => $v): ?>
+                                    <option value="<?= $v['id'] ?>" <?= $row['branch_id'] == $v['id'] ? 'selected' : '' ?>><?= $v['branch_code'] ?> - <?= $v['branch_name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small class="text-danger"><?= form_error('branch') ?></small>
+                        </div>
+                    </div>
 
                     <div class="row mb-3">
                         <label class="col-sm-3 col-form-label"></label>

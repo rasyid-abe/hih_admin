@@ -136,20 +136,26 @@ class User extends CI_Controller {
 	public function add_user()
 	{
 		$role = $this->db->get('user_role')->result_array();
+		$branch = $this->db->get('branch')->result_array();
+
 		$idrole = [];
 		foreach ($role as $k => $v) {$idrole[] = $v['id'];}
+		$idbranch = [];
+		foreach ($branch as $k => $v) {$idbranch[] = $v['id'];}
 
 		$this->form_validation->set_rules('fullname', 'Fullname', 'required|trim');
 		$this->form_validation->set_rules('nik', 'NIK', 'required|trim|is_unique[user.nik]', ['is_unique' => 'This NIK has already registered!']);
 		$this->form_validation->set_rules('email', 'Email', 'valid_email|trim');
 		$this->form_validation->set_rules('phone', 'Phone', 'max_length[14]|trim');
 		$this->form_validation->set_rules('role', 'Role', 'required|in_list['.implode(',', $idrole).']', ['in_list' => 'The User Role must be selected']);
+		$this->form_validation->set_rules('branch', 'Branch', 'required|in_list['.implode(',', $idbranch).']', ['in_list' => 'The User Branch must be selected']);
 
 		if ($this->form_validation->run() == false) {
 			$data = [];
 
 			$data['title'] = "Add User";
 			$data['role'] = $role;
+			$data['branch'] = $branch;
 
 			$this->template->load('basepage/base', 'user/input-v', $data);
 		} else {
@@ -167,6 +173,7 @@ class User extends CI_Controller {
 				'created_by' => $this->session->userdata('id'),
 				'updated_by' => $this->session->userdata('id'),
 				'role_id' => $post['role'],
+				'branch_id' => $post['branch'],
 			];
 
 			if ($this->db->insert('user', $data)) {
@@ -186,10 +193,18 @@ class User extends CI_Controller {
 		$nik = $this->uri->segment(3);
 		$post = $this->input->post();
 		$role = $this->db->get('user_role')->result_array();
+		$branch = $this->db->get('branch')->result_array();
+
+		$idrole = [];
+		foreach ($role as $k => $v) {$idrole[] = $v['id'];}
+		$idbranch = [];
+		foreach ($branch as $k => $v) {$idbranch[] = $v['id'];}
 
 		$this->form_validation->set_rules('fullname', 'Fullname', 'required|trim');
 		$this->form_validation->set_rules('email', 'Email', 'valid_email|trim');
 		$this->form_validation->set_rules('phone', 'Phone', 'min_length[9]|max_length[14]|trim');
+		$this->form_validation->set_rules('role', 'Role', 'required|in_list['.implode(',', $idrole).']', ['in_list' => 'The User Role must be selected']);
+		$this->form_validation->set_rules('branch', 'Branch', 'required|in_list['.implode(',', $idbranch).']', ['in_list' => 'The User Branch must be selected']);
 
 		if ($this->form_validation->run() == false) {
 
@@ -200,6 +215,8 @@ class User extends CI_Controller {
 			$data['title'] = "Edit User";
 			$data['row'] = $row;
 			$data['role'] = $role;
+			$data['branch'] = $branch;
+
 			$this->template->load('basepage/base', 'user/edit-v', $data);
 		} else {
 
@@ -208,6 +225,7 @@ class User extends CI_Controller {
 			$this->db->set('email', htmlspecialchars($post['email']));
 			$this->db->set('phone', htmlspecialchars($post['phone']));
 			$this->db->set('role_id', $post['role']);
+			$this->db->set('branch_id', $post['branch']);
 			$this->db->set('updated_by',  $this->session->userdata('id'));
 			$this->db->where('nik', $post['nik']);
 
@@ -322,6 +340,8 @@ class User extends CI_Controller {
 		$sheet->setCellValue('F3', "NO. HP"); // Set kolom E3 dengan tulisan "ALAMAT"
 		$sheet->setCellValue('G3', "ROLE"); // Set kolom E3 dengan tulisan "ALAMAT"
 		$sheet->setCellValue('H3', "STATUS"); // Set kolom E3 dengan tulisan "ALAMAT"
+		$sheet->setCellValue('I3', "KODE CABANG"); // Set kolom E3 dengan tulisan "ALAMAT"
+		$sheet->setCellValue('J3', "NAMA CABANG"); // Set kolom E3 dengan tulisan "ALAMAT"
 		// Apply style header yang telah kita buat tadi ke masing-masing kolom header
 		$sheet->getStyle('A3')->applyFromArray($style_col);
 		$sheet->getStyle('B3')->applyFromArray($style_col);
@@ -331,11 +351,14 @@ class User extends CI_Controller {
 		$sheet->getStyle('F3')->applyFromArray($style_col);
 		$sheet->getStyle('G3')->applyFromArray($style_col);
 		$sheet->getStyle('H3')->applyFromArray($style_col);
+		$sheet->getStyle('I3')->applyFromArray($style_col);
+		$sheet->getStyle('J3')->applyFromArray($style_col);
 
 		// Panggil function view yang ada di SiswaModel untuk menampilkan semua data siswanya
 		$this->db->select('*');
 		$this->db->from('user a');
 		$this->db->join('user_role b', 'a.role_id=b.id', 'left');
+		$this->db->join('branch c', 'a.branch_id=c.id', 'left');
 		$this->db->where('a.id !=', 1);
 		$rows = $this->db->get()->result();
 		
@@ -351,6 +374,8 @@ class User extends CI_Controller {
 		  $sheet->setCellValue('F'.$numrow, $data->phone);
 		  $sheet->setCellValue('G'.$numrow, $data->name);
 		  $sheet->setCellValue('H'.$numrow, $data->is_active > 0 ? 'Akfif' : 'Nonaktif');
+		  $sheet->setCellValue('I'.$numrow, $data->branch_code);
+		  $sheet->setCellValue('J'.$numrow, $data->branch_name);
 		  
 		  // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
 		  $sheet->getStyle('A'.$numrow)->applyFromArray($style_row);
@@ -361,6 +386,8 @@ class User extends CI_Controller {
 		  $sheet->getStyle('F'.$numrow)->applyFromArray($style_row);
 		  $sheet->getStyle('G'.$numrow)->applyFromArray($style_row);
 		  $sheet->getStyle('H'.$numrow)->applyFromArray($style_row);
+		  $sheet->getStyle('I'.$numrow)->applyFromArray($style_row);
+		  $sheet->getStyle('J'.$numrow)->applyFromArray($style_row);
 		  
 		  $no++; // Tambah 1 setiap kali looping
 		  $numrow++; // Tambah 1 setiap kali looping
@@ -374,6 +401,8 @@ class User extends CI_Controller {
 		$sheet->getColumnDimension('F')->setWidth(30); // Set width kolom E
 		$sheet->getColumnDimension('G')->setWidth(30); // Set width kolom E
 		$sheet->getColumnDimension('H')->setWidth(30); // Set width kolom E
+		$sheet->getColumnDimension('I')->setWidth(30); // Set width kolom E
+		$sheet->getColumnDimension('J')->setWidth(30); // Set width kolom E
 		
 		// Set height semua kolom menjadi auto (mengikuti height isi dari kolommnya, jadi otomatis)
 		$sheet->getDefaultRowDimension()->setRowHeight(-1);

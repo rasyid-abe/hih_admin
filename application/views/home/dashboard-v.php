@@ -104,6 +104,7 @@
               <th scope="col">#</th>
               <th scope="col">NIK</th>
               <th scope="col">User</th>
+              <th scope="col">Branch</th>
               <th scope="col">DateTime</th>
               <th scope="col">Activities</th>
             </tr>
@@ -114,6 +115,7 @@
               <td><?= $k +1 ?></td>
               <td><?= $v['nik']?></td>
               <td><?= $v['fullname']?></td>
+              <td><?= $v['branch_name']?></td>
               <td><?= $v['datetime']?></td>
               <td><?= $v['log']?></td>
             </tr>

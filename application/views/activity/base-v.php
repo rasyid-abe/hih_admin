@@ -9,6 +9,7 @@
                     <th class="text-center">NO</th>
                     <th class="text-center">NIK</th>
                     <th class="text-center">USER</th>
+                    <th class="text-center">BRANCH</th>
                     <th class="text-center">DATITIME</th>
                     <th class="text-center">ACTIVITIES</th>
                 </tr>
@@ -18,6 +19,7 @@
                         <td class="text-center"><?= $k + 1 ?></td>
                         <td class="text-center"><?= $v['nik'] ?></td>
                         <td class="text-center"><?= $v['fullname'] ?></td>
+                        <td class="text-center"><?= $v['branch_name'] ?></td>
                         <td class="text-center"><?= $v['datetime'] ?></td>
                         <td class=""><?= $v['log'] ?></td>
                     </tr>

@@ -22,8 +22,9 @@ class Home extends CI_Controller {
 
 		$this->db->order_by("log_activities.datetime", "desc");
 		$this->db->limit(12);
-		$this->db->select('user.nik, user.fullname, log_activities.datetime, log_activities.log');
+		$this->db->select('user.nik, user.fullname, log_activities.datetime, log_activities.log, branch.branch_name');
 		$this->db->join('user', 'user.nik = log_activities.nik');
+		$this->db->join('branch', 'user.branch_id = branch.id');
 		$data['activities'] = $this->db->get('log_activities')->result_array();
 
 		$data['title'] = 'Dashboard';

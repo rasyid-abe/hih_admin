@@ -153,6 +153,7 @@
                 <ul id="master-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li><a href="<?= base_url('role') ?>"><i class="bi bi-circle"></i><span>User Role</span></a></li>
                     <li><a href="<?= base_url('group') ?>"><i class="bi bi-circle"></i><span>Document Group</span></a></li>
+                    <li><a href="<?= base_url('branch') ?>"><i class="bi bi-circle"></i><span>Branch</span></a></li>
                 </ul>
             </li><!-- End Tables Nav -->
 
@@ -161,6 +162,7 @@
                     <i class="bi bi-layers-fill"></i><span>Utility</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="utility-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li><a href="<?= base_url('fid') ?>"><i class="bi bi-circle"></i><span>Data FID</span></a></li>
                     <li><a href="<?= base_url('fraud') ?>"><i class="bi bi-circle"></i><span>Fraud</span></a></li>
                     <li><a href="<?= base_url('slide') ?>"><i class="bi bi-circle"></i><span>Slide Banner</span></a></li>
                     <li><a href="<?= base_url('term_condition') ?>"><i class="bi bi-circle"></i><span>Term & Condition</span></a></li>

@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="role" class="col-sm-3 col-form-label">User Role</label>
+                        <label for="role" class="col-sm-3 col-form-label">User Role <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <select class="form-select" name="role" id="role" required>
                                 <option selected="">Select Role</option>
@@ -49,6 +49,19 @@
                                 <?php endforeach; ?>
                             </select>
                             <small class="text-danger"><?= form_error('role') ?></small>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="role" class="col-sm-3 col-form-label">User Branch <span class="text-danger">*</span></label>
+                        <div class="col-sm-9">
+                            <select class="form-select" name="branch" id="branch" required>
+                                <option selected="">Select Branch</option>
+                                <?php foreach ($branch as $k => $v): ?>
+                                    <option value="<?= $v['id'] ?>"><?= $v['branch_code'] ?> - <?= $v['branch_name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small class="text-danger"><?= form_error('branch') ?></small>
                         </div>
                     </div>
 
