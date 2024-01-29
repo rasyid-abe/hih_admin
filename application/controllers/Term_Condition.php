@@ -53,6 +53,16 @@ class Term_condition extends CI_Controller {
 			];
 
             if ($this->db->insert('term_condition', $data)) {
+
+				$logs = [
+					'type' => 'term',
+					'page' => 'Term & Conditions',
+					'title' => $post['name'],
+					'status' => 1,
+					'id_content' => $this->db->insert_id(),
+				];
+				notif($logs);
+
 				$this->session->set_flashdata('alert_head', 'success');
 				$this->session->set_flashdata('alert_msg', 'Success create term & condition!');
 			} else {
@@ -89,6 +99,16 @@ class Term_condition extends CI_Controller {
 			$this->db->where('id', $post['id']);
 
 			if ($this->db->update('term_condition')) {
+
+				$logs = [
+					'type' => 'term',
+					'page' => 'Term & Conditions',
+					'title' => $post['name'],
+					'status' => 1,
+					'id_content' => $post['id'],
+				];
+				notif($logs);
+
 				$this->session->set_flashdata('alert_head', 'success');
 				$this->session->set_flashdata('alert_msg', 'Success update term & condition!');
 			} else {
@@ -104,6 +124,7 @@ class Term_condition extends CI_Controller {
 	{
 		$this->db->where('id', $id);
 		if ($this->db->delete('term_condition')) {
+			$this->db->where(['type' => 'term', 'id_content' => $id])->delete('notification');
 			$this->session->set_flashdata('alert_head', 'success');
 			$this->session->set_flashdata('alert_msg', 'Success deleted term & condition!');
 		} else {

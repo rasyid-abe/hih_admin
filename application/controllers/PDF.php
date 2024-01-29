@@ -83,6 +83,14 @@ class Pdf extends CI_Controller {
 			];
 
             if ($this->db->insert('document_pdf', $data)) {
+				$logs = [
+					'type' => 'pdf',
+					'page' => 'ReadPdf',
+					'title' => htmlspecialchars($post['file_name']),
+					'id_content' => $this->db->insert_id(),
+				];
+				notif($logs);
+
 				$this->session->set_flashdata('alert_head', 'success');
 				$this->session->set_flashdata('alert_msg', 'Success upload document pdf!');
 			} else {
@@ -149,6 +157,15 @@ class Pdf extends CI_Controller {
 
 			if ($this->db->update('document_pdf')) {
                 if (!$docpdf) {
+					$logs = [
+						'type' => 'pdf',
+						'page' => 'ReadPdf',
+						'title' => htmlspecialchars($post['file_name']),
+						'status' => 1,
+						'id_content' => $post['id'],
+					];
+					notif($logs);
+
                     rename(FCPATH.'assets/documents/'.str_replace(' ', '_', $post['old_name']).'.pdf', FCPATH.'assets/documents/'.str_replace(' ', '_', $post['file_name']).'.pdf');
                 }
 
@@ -167,6 +184,7 @@ class Pdf extends CI_Controller {
 	{
 		$this->db->where('id', $id);
 		if ($this->db->delete('document_pdf')) {
+			$this->db->where(['type' => 'pdf', 'id_content' => $id])->delete('notification');
 			$this->session->set_flashdata('alert_head', 'success');
 			$this->session->set_flashdata('alert_msg', 'Success deleted document pdf!');
 		} else {
@@ -185,6 +203,10 @@ class Pdf extends CI_Controller {
 		$this->db->where('id', $id);
 
 		if ($this->db->update('document_pdf')) {
+
+			$this->db->where(['type' => 'pdf', 'id_content' => $id]);
+			$this->db->update('notification', ['status' => $sts]);
+
 			$this->session->set_flashdata('alert_head', 'success');
 			$this->session->set_flashdata('alert_msg', 'Success '.$msg.' document pdf!');
 		} else {

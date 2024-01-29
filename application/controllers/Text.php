@@ -63,6 +63,14 @@ class Text extends CI_Controller {
 			];
 
             if ($this->db->insert('document_text', $data)) {
+				$logs = [
+					'type' => 'text',
+					'page' => 'ReadText',
+					'title' => htmlspecialchars($post['name']),
+					'id_content' => $this->db->insert_id(),
+				];
+				notif($logs);
+
 				$this->session->set_flashdata('alert_head', 'success');
 				$this->session->set_flashdata('alert_msg', 'Success create document text!');
 			} else {
@@ -107,6 +115,14 @@ class Text extends CI_Controller {
 			$this->db->where('id', $post['id']);
 
 			if ($this->db->update('document_text')) {
+				$logs = [
+					'type' => 'text',
+					'page' => 'ReadText',
+					'title' => htmlspecialchars($post['name']),
+					'status' => 1,
+					'id_content' => $post['id'],
+				];
+				notif($logs);
 				$this->session->set_flashdata('alert_head', 'success');
 				$this->session->set_flashdata('alert_msg', 'Success update document text!');
 			} else {
@@ -122,6 +138,7 @@ class Text extends CI_Controller {
 	{
 		$this->db->where('id', $id);
 		if ($this->db->delete('document_text')) {
+			$this->db->where(['type' => 'text', 'id_content' => $id])->delete('notification');
 			$this->session->set_flashdata('alert_head', 'success');
 			$this->session->set_flashdata('alert_msg', 'Success deleted document text!');
 		} else {
@@ -140,6 +157,10 @@ class Text extends CI_Controller {
 		$this->db->where('id', $id);
 
 		if ($this->db->update('document_text')) {
+
+			$this->db->where(['type' => 'text', 'id_content' => $id]);
+			$this->db->update('notification', ['status' => $sts]);
+			
 			$this->session->set_flashdata('alert_head', 'success');
 			$this->session->set_flashdata('alert_msg', 'Success '.$msg.' document text!');
 		} else {

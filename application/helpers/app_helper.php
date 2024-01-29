@@ -36,6 +36,17 @@ function activity($params)
     $ci->db->insert('log_activities', $params);
 }
 
+function notif( $params )
+{
+    $ci = get_instance();
+    $ci->db->replace('notification', $params);
+}
+
+function read_notif( $params )
+{
+    $ci = get_instance();
+    $ci->db->insert('notif_read', $params);
+}
 function get_area()
 {
     $areas = ['Aceh', 'Bali', 'Banten', 'Bengkulu', 'DI Yogyakarta', 'DKI Jakarta', 'Gorontalo', 'Jambi', 'Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'Kalimantan Barat', 'Kalimantan Selatan', 'Kalimantan Tengah', 'Kalimantan Timur', 'Kalimantan Utara', 'Kep. Bangka Belitung', 'Kep. Riau', 'Lampung', 'Maluku', 'Maluku Utara', 'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Papua', 'Papua Barat', 'Riau', 'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tenggara', 'Sulawesi Utara', 'Sumatera Barat', 'Sumatera Selatan', 'Sumatera Utara'];

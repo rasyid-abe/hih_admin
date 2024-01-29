@@ -9,6 +9,7 @@ class Home extends CI_Controller {
 		is_logged_id();
 		date_default_timezone_set('Asia/Jakarta');
 		$this->load->library('form_validation');
+		$this->load->model('documents_m', 'documents');
 	}
 
 	public function index()
