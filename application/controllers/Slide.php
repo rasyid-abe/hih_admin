@@ -45,7 +45,7 @@ class Slide extends CI_Controller {
 				$config['upload_path'] = './assets/slides/';
 				$config['allowed_types'] = 'gif|jpg|jpeg|png';
 				$config['max_size'] = '2048';
-				$config['file_name'] = str_replace(' ', '_', $post['name']).'.'.end($ext);
+				$config['file_name'] = str_replace(' ', '_', htmlspecialchars($post['name'])).'.'.end($ext);
 
 				$this->upload->initialize($config);
 
@@ -57,7 +57,7 @@ class Slide extends CI_Controller {
 			}
 
             $data = [
-				'image' => str_replace(' ', '_', $post['name']).'.'.end($ext),
+				'image' => str_replace(' ', '_', htmlspecialchars($post['name'])).'.'.end($ext),
 				'description' => htmlspecialchars($post['description']),
 				'date_created' => date("Y-m-d H:i:s"),
 				'created_by' => $this->session->userdata('id'),

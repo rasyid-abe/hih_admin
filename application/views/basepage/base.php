@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>HIH - <?= $title ?></title>
+    <title>PAS - <?= $title ?></title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -49,7 +49,7 @@
             <a href="index.html" class="logo d-flex align-items-center">
                 <!-- <h3 class="text-white">NICE ADMIN</h3> -->
                 <!-- <img src="<?= base_url() ?>assets/img/logo.png" alt=""> -->
-                <span class="d-none d-lg-block text-white">HIH Admin</span>
+                <span class="d-none d-lg-block text-white">PAS Admin</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn text-white"></i>
         </div><!-- End Logo -->

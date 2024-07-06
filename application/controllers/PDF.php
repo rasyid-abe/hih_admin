@@ -63,7 +63,7 @@ class Pdf extends CI_Controller {
 				$config['upload_path'] = './assets/documents/';
 				$config['allowed_types'] = 'pdf';
 				$config['max_size'] = '8192';
-                $config['file_name'] = str_replace(' ', '_', $post['file_name']).'.pdf';
+                $config['file_name'] = str_replace(' ', '_', htmlspecialchars($post['file_name'])).'.pdf';
 
 				$this->upload->initialize($config);
 				if (!$this->upload->do_upload('pdf')) {
@@ -182,6 +182,11 @@ class Pdf extends CI_Controller {
 
     public function delete_pdf($id)
 	{
+		$pdf = $this->db->get_where('document_pdf', ['id' => $id])->row('file_name');
+		if ($pdf) {
+			unlink(FCPATH.'assets/documents/'.str_replace(' ', '_', $pdf).'.pdf');
+		}
+
 		$this->db->where('id', $id);
 		if ($this->db->delete('document_pdf')) {
 			$this->db->where(['type' => 'pdf', 'id_content' => $id])->delete('notification');

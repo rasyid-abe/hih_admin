@@ -1,30 +1,37 @@
-<link href="<?= base_url() ?>assets/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="<?= base_url() ?>assets/css/responsive.dataTables.min.css" rel="stylesheet">
+<!-- <link href="<?= base_url() ?>assets/css/jquery.dataTables.min.css" rel="stylesheet"> -->
+<!-- <link href="<?= base_url() ?>assets/css/responsive.dataTables.min.css" rel="stylesheet"> -->
+<link href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/select/2.0.3/css/select.dataTables.css" rel="stylesheet">
+<!-- <link href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css" rel="stylesheet"> -->
 <div class="card">
     <div class="card-body pt-4">
-        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalfid">
+        <!-- <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalfid">
             <i class="bi bi-upload"></i> Excel
         </button>
         <a href="<?= base_url() ?>fid/export" type="button" class="btn btn-primary mb-3"><i class="bi bi-printer"></i>
-            Excel</a>
-        <table id="group_tbl" class=" table datatable display nowrap" style="width:100%">
+            Excel</a> -->
+        <table id="group_tbl" class=" table datatable display nowrap" style="width:130%">
             <thead>
                 <tr>
-                    <th class="text-center">NO</th>
+                    <th class="text-center">DETAIL</th>
+                    <!-- <th class="text-center">NO</th> -->
                     <th class="text-center">BRANCH</th>
                     <th class="text-center">CONTRACT NO</th>
                     <th class="text-center">CUSTOMER NAME</th>
                     <th class="text-center">SALES</th>
                     <th class="text-center">CHM NAME</th>
-                    <th class="text-center">ACTION</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($rows as $k => $v): ?>
                     <tr>
-                        <td>
-                            <?= $k + 1 ?>
+                        <td class="text-center">
+                            <div class="btn btn-sm btn-secondary" onclick="detail(<?= $v['id'] ?>)"><i
+                                    class="bi bi-card-heading"></i></div>
                         </td>
+                        <!-- <td class="text-center">
+                            <?= $k + 1 ?>
+                        </td> -->
                         <td>
                             <?= $v['branch_name'] ?>
                         </td>
@@ -39,14 +46,6 @@
                         </td>
                         <td>
                             <?= $v['name_chm'] ?>
-                        </td>
-                        <td>
-                            <div class="btn btn-sm btn-primary" onclick="detail(<?= $v['id'] ?>)"><i
-                                    class="bi bi-card-heading"></i></div>
-                            <a href="<?= base_url('fid/delete_fid/' . $v['id']) ?>"
-                                onclick="return confirm('Are you sure delete data ?')" class="btn btn-sm btn-danger"
-                                data-toggle="tooltip" data-placement="top" title="Delete"><i
-                                    class="bi bi-trash-fill"></i></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -77,31 +76,158 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-fotos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="title_detail">Detail Data</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div id="content_mdl"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+<div class="modal fade" id="modal-fotos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="title_detail">Detail Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="content_mdl"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
-<script src="<?= base_url() ?>assets/js/jquery.dataTables.min.js" charset="utf-8"></script>
-<script src="<?= base_url() ?>assets/js/dataTables.responsive.min.js" charset="utf-8"></script>
+<!-- <script src="<?= base_url() ?>assets/js/jquery.dataTables.min.js" charset="utf-8"></script>
+<script src="<?= base_url() ?>assets/js/dataTables.responsive.min.js" charset="utf-8"></script> -->
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js" charset="utf-8"></script>
+<script src="https://cdn.datatables.net/select/2.0.3/js/dataTables.select.js" charset="utf-8"></script>
+<script src="https://cdn.datatables.net/select/2.0.3/js/select.dataTables.js" charset="utf-8"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.js" charset="utf-8"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.dataTables.js" charset="utf-8"></script>
 
 <script type="text/javascript">
-    new DataTable('#group_tbl', {
-        responsive: true,
-        pagingType: 'simple'
+    // const table = new DataTable('#group_tbl', {
+    //     responsive: true,
+    //     pagingType: 'simple',
+    //     layout: {
+    //         topStart: {
+    //             buttons: [
+    //                 {
+    //                     text: 'Select filter applied - object',
+    //                     extend: 'selectAll',
+    //                     selectorModifier: {
+    //                         search: 'applied'
+    //                     }
+    //                 },
+    //                 {
+    //                     text: 'Select current page - function',
+    //                     extend: 'selectAll',
+    //                     selectorModifier: function () {
+    //                         return {
+    //                             page: 'current'
+    //                         };
+    //                     }
+    //                 },
+    //                 'selectNone'
+    //             ]
+    //         }
+    //     }
+    // });
+
+    // table.on('click', 'tbody tr', function (e) {
+    //     e.currentTarget.classList.toggle('selected');
+    // });
+
+    // document.querySelector('#button').addEventListener('click', function () {
+    //     alert(table.rows('.selected').data().length + ' row(s) selected');
+    // });
+    function deletedata(e) {
+        let ids = []
+        for (let i = 0; i < e.length; i++) {
+            let id = parseInt(e[i][0].replace(/[^\d.]/g, ''))
+            ids.push(id)
+        }
+        $.ajax({
+            url: '<?= base_url('fid/delete_all') ?>',
+            method: 'post',
+            data: { ids },
+            success: function (res) {
+                if (res) {
+                    location.reload();
+                    // setInterval(function () {
+                    // }, 1000);
+                    // $.toast({
+                    //     heading: 'success',
+                    //     text: "Hapus data masal berhasil.",
+                    //     showHideTransition: 'fade',
+                    //     position: 'top-right',
+                    //     icon: 'success',
+                    //     hideAfter: 3000
+                    // })
+                }
+            }
+        })
+    }
+
+    let table = new DataTable('#group_tbl', {
+        scrollX: true,
+        // "sDom":
+        //     "<'row'" +
+        //     "<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'B>" +
+        //     "<'col-sm-12 col-md-6 d-flex align-items-center justify-content-end justify-content-md-end'f>" +
+        //     ">" +
+            
+        //     "<'table-responsive'tr>" +
+        //     "<'row'" +
+        //     "<'col-sm-12 col-md-4 d-flex align-items-center justify-content-start'l>" +
+        //     "<'col-sm-12 col-md-4 d-flex align-items-center justify-content-start justify-content-md-start'i>" +
+        //     "<'col-sm-12 col-md-4 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+        //     ">",
+        layout: {
+            topStart: {
+                buttons: [
+                    {
+                        className: 'btn btn-success',
+                        text: 'Download',
+                        action: function (e, dt, button, config) {
+                            window.location = '<?= base_url() ?>fid/export';
+                        }
+                    },
+                    {
+                        className: 'btn btn-info',
+                        text: 'Upload',
+                        action: function (e, dt, button, config) {
+                            $('#modalfid').modal('show')
+                        }
+                    },
+                    { extend: 'selectAll', className: 'btn btn-primary' },
+                    { extend: 'selectNone', className: 'btn btn-secondary' },
+                    {
+                        className: 'btn btn-danger',
+                        text: 'Delete',
+                        action: function (e, dt, button, config) {
+                            if (table.rows({ selected: true }).count() < 1) {
+                                alert('Data belum dipilih')
+                            } else {
+                                let msg = prompt("Ketik 'hapus-data-fid' untuk menghapus data yang di pilih");
+                                if (msg == 'hapus-data-fid') {
+                                    deletedata(table.rows({ selected: true }).data())
+                                } else {
+                                    alert('Teks salah')
+                                }
+                            }
+                        }
+                    },
+                ]
+            },
+            bottomStart: {
+                pageLength: {
+                    menu: [ 10, 25, 50, 100, 500 ]
+                }
+            },
+            bottom2Start: 'info',
+        },
+        select: true,
     });
+
+
 
     function detail(id) {
         $.ajax({
@@ -174,7 +300,7 @@
                         </tr>
                     </table>
                 `;
-                $('#title_detail').html('<b>[' + row.branch_name +' - '+ row.contract_no + ']</b>')
+                $('#title_detail').html('<b>[' + row.branch_name + ' - ' + row.contract_no + ']</b>')
                 $('#content_mdl').html(view)
                 $('#modal-fotos').modal('show');
             }

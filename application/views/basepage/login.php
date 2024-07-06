@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
-    <title>HIH Admin</title>
+    <title>PAS Admin</title>
     <link href="<?= base_url() ?>assets/css/jquery.toast.css" rel="stylesheet">
     <link href="<?= base_url() ?>assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="<?= base_url() ?>assets/logo/hihlogo.png">

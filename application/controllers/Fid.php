@@ -281,4 +281,14 @@ class Fid extends CI_Controller {
 		echo json_encode($data);
 	}
 
+	public function delete_all() 
+	{
+		$ids = $this->input->post('ids');
+
+		$this->db->where_in('id', $ids);
+		$delete = $this->db->delete('fid_data');
+
+		echo json_encode($delete);
+	}
+
 }
