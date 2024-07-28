@@ -148,19 +148,21 @@
             url: '<?= base_url('fid/delete_all') ?>',
             method: 'post',
             data: { ids },
+            dataType: 'json',
             success: function (res) {
-                if (res) {
-                    location.reload();
-                    // setInterval(function () {
-                    // }, 1000);
-                    // $.toast({
-                    //     heading: 'success',
-                    //     text: "Hapus data masal berhasil.",
-                    //     showHideTransition: 'fade',
-                    //     position: 'top-right',
-                    //     icon: 'success',
-                    //     hideAfter: 3000
-                    // })
+                console.log(res);
+                if (res.sts) {
+                    $.toast({
+                        heading: 'success',
+                        text: res.row + " data(s) deleted successfully.",
+                        showHideTransition: 'fade',
+                        position: 'top-right',
+                        icon: 'success',
+                        hideAfter: 2000
+                    })
+                    setInterval(function () {
+                        location.reload();
+                    }, 2000);
                 }
             }
         })
@@ -195,6 +197,13 @@
                         text: 'Upload',
                         action: function (e, dt, button, config) {
                             $('#modalfid').modal('show')
+                        }
+                    },
+                    {
+                        className: 'btn btn-dark',
+                        text: 'Failed Upload',
+                        action: function (e, dt, button, config) {
+                            window.location = '<?= base_url() ?>fid/failed_import';
                         }
                     },
                     { extend: 'selectAll', className: 'btn btn-primary' },

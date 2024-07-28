@@ -5,6 +5,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $arr_branch;
+$arr_failed;
 class Fid extends CI_Controller {
 
     function __construct()
@@ -13,6 +14,7 @@ class Fid extends CI_Controller {
 		is_logged_id();
 		date_default_timezone_set('Asia/Jakarta');
 		$this->arr_branch = array();
+		$this->arr_failed = array();
     }
 
     public function index()
@@ -29,6 +31,8 @@ class Fid extends CI_Controller {
 
 	public function import()
 	{
+		$this->session->unset_userdata('failed_fid');
+
 		$filename = $_FILES['excelfile']['name'];
 		$filedata = $_FILES['excelfile']['tmp_name'];
 		$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($filedata);
@@ -41,7 +45,7 @@ class Fid extends CI_Controller {
 		foreach ($branch as $key => $value) {
 			$this->arr_branch[$value['branch_code']] = $value['branch_name'];
 		}
-
+		
 		$myarray = array_map(function($sheetData) {
 			if (count($sheetData) > 0) {
 				if ($sheetData[1] != '' && $sheetData[1] != 'BRANCH') {
@@ -61,16 +65,23 @@ class Fid extends CI_Controller {
 							'date_imported' => date('Y-m-d H:i:s'),
 							'imported_by' => $this->session->userdata('id'),
 						); 
+					} else {
+						$this->arr_failed[] = [
+							'contract_no' => $sheetData[2],
+							'customer_name' => $sheetData[3],
+							'error' => 'Branch belum terdaftar'
+						];
 					}
 				}
 			}
 		}, $sheetData);
 		$clearsheet = array_filter($myarray, fn($value) => !is_null($value) && $value !== '');
 
-		$this->db->trans_start();
-		$this->db->trans_strict(FALSE);
+		// $this->db->trans_start();
+		// $this->db->trans_strict(FALSE);
 
 		$k = 0;
+		
 		foreach ($clearsheet as $item) {
 			if ($this->db->replace('fid_data', $item)) {
 				$logs = [
@@ -83,22 +94,43 @@ class Fid extends CI_Controller {
 				notif($logs);
 
 				$k++;
+			} else {
+				$this->arr_failed[] = [
+					'contract_no' => $item['contract_no'],
+					'customer_name' => $item['customer_name'],
+					'error' => $this->db->error()['message']
+				];
 			}
 		}
+		
+		$this->session->set_userdata('failed_fid', $this->arr_failed);
+		
+		// $this->db->trans_complete();
+		// echo "<pre>";
+		// print_r($this->db->trans_status());
+		// die;
 
-		$this->db->trans_complete();
-
-		if ($this->db->trans_status() === FALSE) {
-			$this->db->trans_rollback();
-			$this->session->set_flashdata('alert_head', 'error');
-			$this->session->set_flashdata('alert_msg', 'Import data from excel failed!');
-		} else {
-			$this->db->trans_commit();
-			$this->session->set_flashdata('alert_head', 'success');
-			$this->session->set_flashdata('alert_msg', 'Success import '.$k.' datas from '.$filename.'!');
-		}
+		// if ($this->db->trans_status() === FALSE) {
+		// 	$this->db->trans_rollback();
+		// 	$this->session->set_flashdata('alert_head', 'error');
+		// 	$this->session->set_flashdata('alert_msg', 'Import data from excel failed!');
+		// } else {
+		// 	$this->db->trans_commit();
+			$link = '<a href="'.base_url('fid/failed_import').'">Failed Data(s)</a>!';
+			$this->session->set_flashdata('alert_head', 'Information');
+			$this->session->set_flashdata('alert_fid', $k.' data(s) imported successfully \r\n'.count($this->arr_failed).' data(s) failed to import \r\n from ' .$filename);
+		// }
 
 		redirect('fid');
+	}
+
+	public function failed_import()
+	{
+		$data = [];
+		$data['title'] = "Failed Import FID";
+		$data["rows"] = $this->session->userdata('failed_fid') ? $this->session->userdata('failed_fid') : [];
+
+		$this->template->load('basepage/base', 'fid/failed-v', $data);
 	}
     
 	public function export(){
@@ -283,12 +315,27 @@ class Fid extends CI_Controller {
 
 	public function delete_all() 
 	{
+		$this->session->unset_userdata('failed_fid');
 		$ids = $this->input->post('ids');
 
-		$this->db->where_in('id', $ids);
-		$delete = $this->db->delete('fid_data');
+		$this->db->group_start();
+		$ids_chunk = array_chunk($ids,1000);
+		foreach($ids_chunk as $ids)
+		{
+			$nids = implode (", ", $ids);
+			$sql_del = "
+				DELETE FROM fid_data WHERE id IN ($nids)
+			";
+			$delete = $this->db->query($sql_del);
+		}
+		$this->db->group_end();
 
-		echo json_encode($delete);
+		$res = [
+			'sts' => true,
+			'row' => count($this->input->post('ids')),
+		];
+
+		echo json_encode($res);
 	}
 
 }

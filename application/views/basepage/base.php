@@ -211,6 +211,17 @@
                 hideAfter: time
             })
         }
+        
+        function toast_fid(heading, text, status) {
+            $.toast({
+                heading: 'Information',
+                text: text,
+                showHideTransition: 'fade',
+                position: 'top-right',
+                icon: 'info',
+                hideAfter: false
+            })
+        }
     </script>
     <?php if ($this->session->flashdata('alert_msg')): ?>
         <?= '<script type="text/javascript">',
@@ -218,6 +229,13 @@
             '"'.$this->session->flashdata('alert_msg').'",',
             '"'.$this->session->flashdata('alert_head').'",',
             '5000 )</script>';
+        ?>
+    <?php endif; ?>
+    <?php if ($this->session->flashdata('alert_fid')): ?>
+        <?= '<script type="text/javascript">',
+            'toast_fid( "<h6>'.ucfirst($this->session->flashdata('alert_head')).'</h6>",',
+            '"'.$this->session->flashdata('alert_fid').'",',
+            ')</script>';
         ?>
     <?php endif; ?>
     <link href="<?= base_url() ?>assets/css/select2.min.css" rel="stylesheet">
