@@ -327,6 +327,13 @@ class Fid extends CI_Controller {
 				DELETE FROM fid_data WHERE id IN ($nids)
 			";
 			$delete = $this->db->query($sql_del);
+
+			$del_notif = "
+				DELETE FROM notification
+				WHERE type = 'fid' AND
+					id_content IN ($nids)
+			";
+			$this->db->query($del_notif);
 		}
 		$this->db->group_end();
 
